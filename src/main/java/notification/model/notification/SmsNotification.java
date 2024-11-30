@@ -1,5 +1,6 @@
 package notification.model.notification;
 
+import notification.model.sender.NotificationType;
 import notification.util.NumberValidator;
 import notification.util.Validator;
 
@@ -27,6 +28,11 @@ public class SmsNotification implements Notification {
     @Override
     public String getSender() {
         return sender;
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.SMS;
     }
 
     public String getNumber() {

@@ -1,5 +1,8 @@
 package notification.model.notification;
 
+import notification.model.sender.NotificationType;
+import notification.util.Validator;
+
 public class TelegramNotification implements Notification {
 
     private final String message;
@@ -31,6 +34,11 @@ public class TelegramNotification implements Notification {
     @Override
     public String getSender() {
         return sender;
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.TELEGRAM;
     }
 
     public String getChatId() {
@@ -67,6 +75,7 @@ public class TelegramNotification implements Notification {
         }
 
         public TelegramNotification build() {
+            Validator.validateNotBlankFields(message, receiver, sender);
             return new TelegramNotification(this);
         }
     }

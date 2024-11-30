@@ -1,9 +1,13 @@
 package notification.model.sender;
 
+import notification.NotificationResponse;
+import notification.callback.ResponseCallback;
 import notification.model.notification.Notification;
 
 public interface NotificationSender<T extends  Notification> {
-    void send(T notification);
+    NotificationResponse send(T notification);
 
-    NotificationSenderType getType();
+    void sendAsync(T notification, ResponseCallback<T> responseCallback);
+
+    NotificationType getType();
 }

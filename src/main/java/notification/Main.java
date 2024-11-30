@@ -1,16 +1,12 @@
 package notification;
 
+import notification.callback.EmailNotificationCallback;
 import notification.exception.ExceptionHandler;
+import notification.factory.AllNotificationSenderFactory;
+import notification.factory.NotificationSenderFactory;
 import notification.model.notification.EmailNotification;
 import notification.model.notification.Notification;
-import notification.model.sender.EmailNotificationSender;
-import notification.model.sender.NotificationSender;
-import notification.model.sender.NotificationSenderType;
-import notification.model.sender.SmsNotificationSender;
-import notification.model.sender.TelegramNotificationSender;
-
-import java.util.ArrayList;
-import java.util.List;
+import notification.model.sender.LogNotificationSender;
 
 public class Main {
 
@@ -18,8 +14,8 @@ public class Main {
         //todo tg validator; send in sms, tg
         Thread.currentThread().setUncaughtExceptionHandler(new ExceptionHandler());
 
-        InputService inputService = new InputService();
-        NotificationSenderType senderType = inputService.getSenderType();
+//        InputService inputService = new InputService();
+//        NotificationType senderType = inputService.getSenderType();
 
         Notification emailNotification = EmailNotification.builder()
                 .message("Hello from email")
@@ -29,17 +25,16 @@ public class Main {
                 .sender("Astana")
                 .build();
 
-        List<NotificationSender<? extends Notification>> notificationSenders = new ArrayList<>();
+        NotificationSenderFactory senderFactory = new AllNotificationSenderFactory();
+        NotificationResolver resolver = new NotificationResolver(senderFactory.get());
 
-        notificationSenders.add(new SmsNotificationSender());
-        notificationSenders.add(new TelegramNotificationSender());
-        notificationSenders.add(new EmailNotificationSender());
-
-        NotificationResolver resolver = new NotificationResolver(notificationSenders);
-        NotificationSender<? extends Notification> notificationSender = resolver.getNotification(
-                senderType);
+        LogNotificationSender notificationSender = resolver.getNotificationSender(
+                emailNotification);
 
         FacadeSender facadeSender = new FacadeSender();
-        facadeSender.sendNotification(notificationSender, emailNotification);
+        facadeSender.sendNotification(
+                notificationSender,
+                emailNotification,
+                new EmailNotificationCallback());
     }
 }

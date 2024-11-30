@@ -1,5 +1,6 @@
 package notification.model.notification;
 
+import notification.model.sender.NotificationType;
 import notification.util.EmailValidator;
 import notification.util.Validator;
 
@@ -28,6 +29,11 @@ public class EmailNotification implements Notification {
     @Override
     public String getSender() {
         return sender;
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.EMAIL;
     }
 
     public String getTitle() {

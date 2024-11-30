@@ -1,10 +1,15 @@
 package notification.model.sender;
 
+import lombok.extern.slf4j.Slf4j;
+import notification.NotificationResponse;
+import notification.NotificationResult;
+import notification.callback.ResponseCallback;
 import notification.model.notification.EmailNotification;
 
+@Slf4j
 public class EmailNotificationSender implements NotificationSender<EmailNotification> {
     @Override
-    public void send(EmailNotification notification) {
+    public NotificationResponse send(EmailNotification notification) {
         System.out.printf(
                 """
                         Отправитель: %s
@@ -18,10 +23,18 @@ public class EmailNotificationSender implements NotificationSender<EmailNotifica
                 notification.getTitle(),
                 notification.getMessage(),
                 notification.getReceiver());
+        return new NotificationResponse(NotificationResult.OK);
     }
 
     @Override
-    public NotificationSenderType getType() {
-        return NotificationSenderType.EMAIL;
+    public void sendAsync(
+            EmailNotification notification,
+            ResponseCallback<EmailNotification> responseCallback) {
+        new Thread(() -> responseCallback.onResponse(notification, send(notification))).start();
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.EMAIL;
     }
 }

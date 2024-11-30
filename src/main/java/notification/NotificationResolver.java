@@ -1,16 +1,17 @@
 package notification;
 
+import notification.exception.NullSenderException;
 import notification.model.notification.Notification;
 import notification.model.sender.LogNotificationSender;
 import notification.model.sender.NotificationSender;
-import notification.model.sender.NotificationSenderType;
+import notification.model.sender.NotificationType;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class NotificationResolver {
-    private final Map<NotificationSenderType, NotificationSender<? extends Notification>> notificationMap;
+    private final Map<NotificationType, NotificationSender<? extends Notification>> notificationMap;
 
     public NotificationResolver(List<NotificationSender<? extends Notification>> notificationSenders) {
         this.notificationMap = new HashMap<>();
@@ -19,7 +20,12 @@ public class NotificationResolver {
         }
     }
 
-    public NotificationSender<? extends Notification> getNotification(NotificationSenderType senderType) {
-        return new LogNotificationSender(notificationMap.get(senderType));
+    public LogNotificationSender getNotificationSender(Notification notification) {
+        LogNotificationSender logNotificationSender = new LogNotificationSender(notificationMap.get(
+                notification.getType()));
+        if (logNotificationSender.getNotificationSender() == null) {
+            throw new NullSenderException("Отправитель не определен");
+        }
+        return logNotificationSender;
     }
 }

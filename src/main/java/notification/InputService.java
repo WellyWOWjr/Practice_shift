@@ -1,15 +1,15 @@
 package notification;
 
-import notification.model.sender.NotificationSenderType;
+import notification.model.sender.NotificationType;
 
 import java.util.Scanner;
 
 public class InputService {
     private final Scanner scanner = new Scanner(System.in);
 
-    public NotificationSenderType getSenderType() {
+    public NotificationType getSenderType() {
         System.out.println("Enter sender type: ");
         String senderType = scanner.next();
-        return NotificationSenderType.valueOf(senderType.toUpperCase());
+        return NotificationType.valueOf(senderType.toUpperCase());
     }
 }

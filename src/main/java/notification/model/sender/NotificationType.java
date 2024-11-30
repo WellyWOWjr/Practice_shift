@@ -1,6 +1,6 @@
 package notification.model.sender;
 
-public enum NotificationSenderType {
+public enum NotificationType {
     TELEGRAM,
     EMAIL,
     SMS
